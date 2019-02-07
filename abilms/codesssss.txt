@@ -1,0 +1,74 @@
+table_user
+
+user_id
+user_name
+user_firstname
+user_lastname
+email
+password
+
+
+
+        $username = $_POST['username'];
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $password = md5($_POST['password']);
+        $email = $_POST['email'];
+
+        // Check for Some Unique Constraints
+        $query = mysqli_query($con, "SELECT user_name, email FROM table_user WHERE user_name = '$username' OR email = '$email'");
+        if(mysqli_num_rows($query) > 0){
+            $row = mysqli_fetch_assoc($query);
+            if($username == $row['user_name'] && !empty($username)){
+            }else {
+
+           		$msg_username='
+			<div id="login-alert" class="alert alert-danger col-sm-12">Username already exists.</div>
+				';
+			}
+       
+            if($email == $row['email'] && !empty($email)){
+ 			 }else {
+           		$msg='
+			<div id="login-alert" class="alert alert-danger col-sm-12">Email already exists.</div>
+				';
+			}
+
+        }
+
+        // Insert Data
+        $sql = "INSERT INTO table_user (user_name, user_firstname, user_lastname, email, password)
+                VALUES ('$username', '$first_name', '$last_name', '$password', '$email')";
+        $query = mysqli_query($con, $sql);
+        if($query){
+            $query = mysqli_query($con, "SELECT user_id FROM table_user WHERE email = '$email'");
+            $row = mysqli_fetch_assoc($query);
+            $_SESSION['user_id'] = $row['user_id'];
+
+			}
+
+
+		}
+
+
+
+===========
+
+// if(isset($_POST["btn_register"])){
+// 	$qr=mysqli_query($con, "select * from table_user where email='".mres($con,$_POST["email"])."'");
+// 	if(mysqli_num_rows($qr)>0){
+// 		$msg='<div id="login-alert" class="alert alert-danger" cols-sm-12">This Email is already exist.</div>';
+// 	}
+// 	else {
+// 		$code = rand(1000,9999).rand(1000,9999);
+// 		$qi=mysqli_query($con, "insert into table_user values(''.'".mres($con,$_POST["username"])."',
+// 			'".mres($con,$_POST["email"])."','".$code."','".mres($con,md5($_POST["password"]))."')");
+// 		// $send = mail (mres($con,$_POST["email"]), "From Abi and Nick", "This is email verify code:".$code);
+// 		if(($qi == true)){
+// 		$msg='<div id="login-alert" class="alert alert-success" cols-sm-12">You are successfully registered. Please check your email to verify</div>';
+
+
+// 		}
+// 	}
+
+// }
